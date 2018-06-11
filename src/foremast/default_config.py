@@ -1,20 +1,20 @@
 """Default Foremast configuration."""
 DEFAULT_CONFIG = {
     'base': {
-        'ami_json_url': None,
+        'ami_json_url': '',
         'default_ec2_securitygroups': {},
         'default_elb_securitygroups': {},
         'default_securitygroup_rules': {},
         'domain': 'example.com',
         'ec2_pipeline_types': [],
         'envs': [],
-        'gate_api_url': None,
+        'gate_api_url': '',
         'gate_ca_bundle': '',
         'gate_client_cert': '',
-        'git_url': None,
+        'git_url': '',
         'regions': [],
         'securitygroup_replacements': {},
-        'templates_path': None,
+        'templates_path': '',
         'types': [
             'datapipeline',
             'ec2',
@@ -24,8 +24,8 @@ DEFAULT_CONFIG = {
         ],
     },
     'credentials': {
-        'gitlab_token': None,
-        'slack_token': None,
+        'gitlab_token': '',
+        'slack_token': '',
     },
     'formats': {},
     'headers': {
