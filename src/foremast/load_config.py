@@ -22,7 +22,7 @@ CONFIG_CFG_LOCATIONS = [
 ENV_FOREMAST_CONFIG_DIRECTORY = 'FOREMAST_CONFIG_DIRECTORY'
 """Environment variable name for Foremast Python configuration directory."""
 
-_UNRESOLVED_CONFIG_MODULE_DIRECTORY = os.getenv(ENV_FOREMAST_CONFIG_DIRECTORY, os.getenv('PWD'))
+_UNRESOLVED_CONFIG_MODULE_DIRECTORY = os.getenv(ENV_FOREMAST_CONFIG_DIRECTORY, '.')
 CONFIG_MODULE_DIRECTORY = pathlib.Path(_UNRESOLVED_CONFIG_MODULE_DIRECTORY).expanduser().resolve()
 """Directory location where 'foremast_config.py' resides."""
 
