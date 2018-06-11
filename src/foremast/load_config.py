@@ -14,8 +14,8 @@ LOG = logging.getLogger(__name__)
 
 CONFIG_CFG_LOCATIONS = [
     '/etc/foremast/foremast.cfg',
-    os.path.expanduser('~/.foremast/foremast.cfg'),
-    './.foremast/foremast.cfg',
+    str(pathlib.Path('~/.foremast/foremast.cfg').expanduser()),
+    str(pathlib.Path('./.foremast/foremast.cfg').resolve()),
 ]
 
 ENV_FOREMAST_CONFIG_DIRECTORY = 'FOREMAST_CONFIG_DIRECTORY'
