@@ -102,6 +102,18 @@ class TypeConflictStrategies(deepmerge.strategy.type_conflict.TypeConflictStrate
         return value
 
 
+class FallbackStrategies(deepmerge.strategy.fallback.FallbackStrategies):
+    """Add fallback strategies when Types are unhandled by builtins."""
+
+    @staticmethod
+    def strategy_equality(config, path, base, nxt):
+        """Check for equality and return first one."""
+        value = deepmerge.strategy.core.STRATEGY_END
+        if base == nxt:
+            value = base
+        return value
+
+
 class Merge(deepmerge.Merger):
     """Handle Foremast configuration legacy values."""
 
@@ -114,6 +126,10 @@ class Merge(deepmerge.Merger):
             fallback_strategies=[],
             type_conflict_strategies=[],
         )
+
+        self._fallback_strategy = FallbackStrategies([
+            'equality',
+        ])
 
         self._type_conflict_strategy = TypeConflictStrategies([
             'comma_split_append',
