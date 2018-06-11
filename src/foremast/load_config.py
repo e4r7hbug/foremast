@@ -7,6 +7,7 @@ import os
 
 from . import merge
 from .default_config import DEFAULT_CONFIG
+from .frozen_config import FrozenConfig
 
 LOG = logging.getLogger(__name__)
 
@@ -21,35 +22,6 @@ ENV_FOREMAST_CONFIG_DIRECTORY = 'FOREMAST_CONFIG_DIRECTORY'
 CONFIG_MODULE_DIRECTORY = os.getenv(ENV_FOREMAST_CONFIG_DIRECTORY, os.getenv('PWD'))
 CONFIG_MODULE_NAME = 'foremast_config'
 CONFIG_MODULE_FILE = '{0}/{1}.py'.format(CONFIG_MODULE_DIRECTORY, CONFIG_MODULE_NAME)
-
-
-class FrozenConfig(dict):
-    """Immutable configuration values."""
-
-    def __getitem__(self, key):
-        """Return immutable form of value."""
-        frozen_value = None
-
-        value = super().__getitem__(key)
-
-        LOG.debug('%s = %s %s', key, value, type(value))
-
-        if isinstance(value, (self.__class__, frozenset)):
-            frozen_value = value
-        elif isinstance(value, (list, set, tuple)):
-            frozen_value = frozenset(value)
-            super().__setitem__(key, frozen_value)
-        elif isinstance(value, (dict)):
-            frozen_value = FrozenConfig(value)
-            super().__setitem__(key, frozen_value)
-        else:
-            frozen_value = value
-
-        return frozen_value
-
-    def __setitem__(self, key, value):
-        """Prevent setting values like :class:`types.MappingProxyType`."""
-        raise TypeError('"{0}" object does not support item assignment'.format(self.__class__.__name__))
 
 
 class ForemastConfig(object):
