@@ -48,7 +48,7 @@ class FrozenConfig(dict):
         return frozen_value
 
     def __setitem__(self, key, value):
-        """Prevent setting values."""
+        """Prevent setting values like :class:`types.MappingProxyType`."""
         raise TypeError('"{0}" object does not support item assignment'.format(self.__class__.__name__))
 
 
