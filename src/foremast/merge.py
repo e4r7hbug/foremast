@@ -9,7 +9,7 @@ class TypeConflictStrategies(deepmerge.strategy.type_conflict.TypeConflictStrate
     """Add conflict strategy."""
 
     @staticmethod
-    def strategy_comma_split_append(config, path, base, nxt):
+    def strategy_comma_split_append(_config, _path, base, nxt):
         """Merge comma separated :obj:`str` and :obj:`list`."""
         if isinstance(base, str) and isinstance(nxt, list):
             value = base.split(',') + nxt
@@ -20,7 +20,7 @@ class TypeConflictStrategies(deepmerge.strategy.type_conflict.TypeConflictStrate
         return value
 
     @staticmethod
-    def strategy_not_empty(config, path, base, nxt):
+    def strategy_not_empty(_config, _path, base, nxt):
         """Return whichever value is not empty."""
         if not base and nxt:
             value = nxt
@@ -31,7 +31,7 @@ class TypeConflictStrategies(deepmerge.strategy.type_conflict.TypeConflictStrate
         return value
 
     @staticmethod
-    def strategy_configparser(config, path, base, nxt):
+    def strategy_configparser(_config, _path, base, nxt):
         """Convert :obj:`configparser.SectionProxy` to :obj:`dict` for merge."""
         value = deepmerge.strategy.core.STRATEGY_END
         if isinstance(base, configparser.SectionProxy):
@@ -41,7 +41,7 @@ class TypeConflictStrategies(deepmerge.strategy.type_conflict.TypeConflictStrate
         return value
 
     @staticmethod
-    def strategy_override_str_to_int(config, path, base, nxt):
+    def strategy_override_str_to_int(_config, _path, base, nxt):
         """Convert :obj:`str` to :obj:`int` for comparison."""
         value = deepmerge.strategy.core.STRATEGY_END
         if isinstance(base, int) and isinstance(nxt, str):
@@ -49,7 +49,7 @@ class TypeConflictStrategies(deepmerge.strategy.type_conflict.TypeConflictStrate
         return value
 
     @staticmethod
-    def strategy_json_security_groups(config, path, base, nxt):
+    def strategy_json_security_groups(_config, _path, base, nxt):
         """Try to convert JSON to Python object of Security Groups."""
         value = deepmerge.strategy.core.STRATEGY_END
         if isinstance(base, dict) and isinstance(nxt, str):
@@ -65,7 +65,7 @@ class FallbackStrategies(deepmerge.strategy.fallback.FallbackStrategies):
     """Add fallback strategies when Types are unhandled by builtins."""
 
     @staticmethod
-    def strategy_equality(config, path, base, nxt):
+    def strategy_equality(_config, _path, base, nxt):
         """Check for equality and return first one."""
         value = deepmerge.strategy.core.STRATEGY_END
         if base == nxt:
