@@ -33,7 +33,9 @@ DEFAULT_CONFIG = {
         'content-type': 'application/json',
         'user-agent': 'foremast',
     },
-    'links': {},
+    'links': {
+        'default': {},
+    },
     'task_timeouts': {
         'default': 120,
         'envs': {},
