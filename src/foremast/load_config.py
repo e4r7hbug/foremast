@@ -91,6 +91,16 @@ class TypeConflictStrategies(deepmerge.strategy.type_conflict.TypeConflictStrate
             value = deepmerge.strategy.core.STRATEGY_END
         return value
 
+    @staticmethod
+    def strategy_configparser(config, path, base, nxt):
+        """Convert :obj:`configparser.SectionProxy` to :obj:`dict` for merge."""
+        value = deepmerge.strategy.core.STRATEGY_END
+        if isinstance(base, configparser.SectionProxy):
+            value = Merge().merge(dict(base), nxt)
+        elif isinstance(nxt, configparser.SectionProxy):
+            value = Merge().merge(base, dict(nxt))
+        return value
+
 
 class Merge(deepmerge.Merger):
     """Handle Foremast configuration legacy values."""
@@ -108,6 +118,7 @@ class Merge(deepmerge.Merger):
         self._type_conflict_strategy = TypeConflictStrategies([
             'comma_split_append',
             'not_empty',
+            'configparser',
         ])
 
 
