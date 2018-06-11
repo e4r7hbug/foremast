@@ -217,8 +217,7 @@ class ForemastConfig(object):
             locations = '\n'.join(list(CONFIG_CFG_LOCATIONS) + [CONFIG_MODULE_FILE])
             LOG.warning('No configuration files found in:\n%s\nUsing defaults.', locations)
 
-        # config = deepmerge.merge_or_raise.merge(loaded_config, DEFAULT_CONFIG)
-        config = Merge().merge(loaded_config, DEFAULT_CONFIG)
+        config = Merge().merge(DEFAULT_CONFIG, loaded_config)
 
         self._config = FrozenConfig(config)
         LOG.debug('Complete configuration: %s', self._config)
