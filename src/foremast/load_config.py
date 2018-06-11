@@ -2,6 +2,7 @@
 """Central configuration loading."""
 import configparser
 import importlib
+import json
 import logging
 import os
 
@@ -109,6 +110,15 @@ class TypeConflictStrategies(deepmerge.strategy.type_conflict.TypeConflictStrate
             value = int(nxt)
         return value
 
+    @staticmethod
+    def strategy_json(config, path, base, nxt):
+        """Try to convert JSON to Python object."""
+        value = deepmerge.strategy.core.STRATEGY_END
+        if isinstance(base, dict) and isinstance(nxt, str):
+            code = json.loads(nxt)
+            value = Merge().merge(base, code)
+        return value
+
 
 class FallbackStrategies(deepmerge.strategy.fallback.FallbackStrategies):
     """Add fallback strategies when Types are unhandled by builtins."""
@@ -141,6 +151,7 @@ class Merge(deepmerge.Merger):
 
         self._type_conflict_strategy = TypeConflictStrategies([
             'comma_split_append',
+            'json',
             'not_empty',
             'configparser',
             'override_str_to_int',
