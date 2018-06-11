@@ -80,7 +80,7 @@ class ForemastConfig(object):
         loaded_config = self.load_config_module() or self.load_config_cfg()
 
         if not loaded_config:
-            locations = '\n'.join(CONFIG_CFG_LOCATIONS + [CONFIG_MODULE_FILE])
+            locations = '\n'.join([CONFIG_MODULE_FILE] + CONFIG_CFG_LOCATIONS)
             LOG.warning('No configuration files found in:\n%s\nUsing defaults.', locations)
 
         config = merge.MERGE(DEFAULT_CONFIG, loaded_config)
