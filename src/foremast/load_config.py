@@ -101,6 +101,14 @@ class TypeConflictStrategies(deepmerge.strategy.type_conflict.TypeConflictStrate
             value = Merge().merge(base, dict(nxt))
         return value
 
+    @staticmethod
+    def strategy_override_str_to_int(config, path, base, nxt):
+        """Convert :obj:`str` to :obj:`int` for comparison."""
+        value = deepmerge.strategy.core.STRATEGY_END
+        if isinstance(base, int) and isinstance(nxt, str):
+            value = int(nxt)
+        return value
+
 
 class FallbackStrategies(deepmerge.strategy.fallback.FallbackStrategies):
     """Add fallback strategies when Types are unhandled by builtins."""
@@ -135,6 +143,7 @@ class Merge(deepmerge.Merger):
             'comma_split_append',
             'not_empty',
             'configparser',
+            'override_str_to_int',
         ])
 
 
