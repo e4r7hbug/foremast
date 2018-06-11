@@ -4,6 +4,7 @@ import configparser
 import importlib
 import logging
 import os
+import pathlib
 
 from . import merge
 from .default_config import DEFAULT_CONFIG
@@ -20,13 +21,15 @@ CONFIG_CFG_LOCATIONS = frozenset([
 ENV_FOREMAST_CONFIG_DIRECTORY = 'FOREMAST_CONFIG_DIRECTORY'
 """Environment variable name for Foremast Python configuration directory."""
 
-CONFIG_MODULE_DIRECTORY = os.getenv(ENV_FOREMAST_CONFIG_DIRECTORY, os.getenv('PWD'))
+_UNRESOLVED_CONFIG_MODULE_DIRECTORY = os.getenv(ENV_FOREMAST_CONFIG_DIRECTORY, os.getenv('PWD'))
+CONFIG_MODULE_DIRECTORY = pathlib.Path(_UNRESOLVED_CONFIG_MODULE_DIRECTORY).expanduser().resolve()
 """Directory location where 'foremast_config.py' resides."""
 
 CONFIG_MODULE_NAME = 'foremast_config'
 """Name of Foremast configuration Python file."""
 
-CONFIG_MODULE_FILE = '{0}/{1}.py'.format(CONFIG_MODULE_DIRECTORY, CONFIG_MODULE_NAME)
+_CONFIG_MODULE_FILE_PATH = CONFIG_MODULE_DIRECTORY / (CONFIG_MODULE_NAME + '.py')
+CONFIG_MODULE_FILE = str(_CONFIG_MODULE_FILE_PATH)
 """Fully qualified path for 'foremast_config.py'."""
 
 
