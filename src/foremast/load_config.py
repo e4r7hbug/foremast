@@ -62,10 +62,11 @@ class ForemastConfig(object):
         if self.config_from_module:
             return self.config_from_module
 
-        loader = importlib.machinery.SourceFileLoader(CONFIG_MODULE_NAME, CONFIG_MODULE_FILE)
+        config_spec = importlib.util.spec_from_file_location(CONFIG_MODULE_NAME, CONFIG_MODULE_FILE)
+        config_module = importlib.util.module_from_spec(config_spec)
 
         try:
-            config_module = loader.load_module()
+            config_spec.loader.exec_module(config_module)
         except FileNotFoundError as error:
             LOG.debug('Foremast configuration Module not found in "$%s": %s', ENV_FOREMAST_CONFIG_DIRECTORY, error)
         else:
