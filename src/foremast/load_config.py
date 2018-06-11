@@ -111,11 +111,14 @@ class TypeConflictStrategies(deepmerge.strategy.type_conflict.TypeConflictStrate
         return value
 
     @staticmethod
-    def strategy_json(config, path, base, nxt):
-        """Try to convert JSON to Python object."""
+    def strategy_json_security_groups(config, path, base, nxt):
+        """Try to convert JSON to Python object of Security Groups."""
         value = deepmerge.strategy.core.STRATEGY_END
         if isinstance(base, dict) and isinstance(nxt, str):
-            code = json.loads(nxt)
+            try:
+                code = json.loads(nxt)
+            except json.JSONDecodeError:
+                code = {'all_envs': nxt.split(',')}
             value = Merge().merge(base, code)
         return value
 
@@ -151,7 +154,7 @@ class Merge(deepmerge.Merger):
 
         self._type_conflict_strategy = TypeConflictStrategies([
             'comma_split_append',
-            'json',
+            'json_security_groups',
             'not_empty',
             'configparser',
             'override_str_to_int',
