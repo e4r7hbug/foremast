@@ -18,10 +18,16 @@ CONFIG_CFG_LOCATIONS = frozenset([
 ])
 
 ENV_FOREMAST_CONFIG_DIRECTORY = 'FOREMAST_CONFIG_DIRECTORY'
+"""Environment variable name for Foremast Python configuration directory."""
 
 CONFIG_MODULE_DIRECTORY = os.getenv(ENV_FOREMAST_CONFIG_DIRECTORY, os.getenv('PWD'))
+"""Directory location where 'foremast_config.py' resides."""
+
 CONFIG_MODULE_NAME = 'foremast_config'
+"""Name of Foremast configuration Python file."""
+
 CONFIG_MODULE_FILE = '{0}/{1}.py'.format(CONFIG_MODULE_DIRECTORY, CONFIG_MODULE_NAME)
+"""Fully qualified path for 'foremast_config.py'."""
 
 
 class ForemastConfig(object):
