@@ -36,16 +36,18 @@ class SpinnakerPipelineS3(SpinnakerPipeline):
         prop_path (str): Path to the raw.properties.json.
     """
 
-    def render_wrapper(self, region='us-east-1'):
+    def render_wrapper(self, region='us-east-1', **kwargs):
         """Generate the base Pipeline wrapper.
 
         This renders the non-repeatable stages in a pipeline, like jenkins, baking, tagging and notifications.
 
         Args:
             region (str): AWS Region.
+            kwargs (dict): Extra variables to pass to the Template.
 
         Returns:
             dict: Rendered Pipeline wrapper.
+
         """
         base = self.settings['pipeline']['base']
 
@@ -75,7 +77,8 @@ class SpinnakerPipelineS3(SpinnakerPipeline):
 
         self.log.debug('Wrapper app data:\n%s', pformat(data))
 
-        wrapper = get_template(template_file='pipeline/pipeline_wrapper.json.j2', data=data, formats=self.generated)
+        wrapper = get_template(
+            template_file='pipeline/pipeline_wrapper.json.j2', data=data, formats=self.generated, **kwargs)
 
         return json.loads(wrapper)
 
