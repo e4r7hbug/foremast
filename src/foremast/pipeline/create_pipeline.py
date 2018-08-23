@@ -87,16 +87,18 @@ class SpinnakerPipeline:
         self.log.info('Successfully created "%s" pipeline in application "%s".', pipeline_dict['name'],
                       pipeline_dict['application'])
 
-    def render_wrapper(self, region='us-east-1'):
+    def render_wrapper(self, region='us-east-1', **kwargs):
         """Generate the base Pipeline wrapper.
 
         This renders the non-repeatable stages in a pipeline, like jenkins, baking, tagging and notifications.
 
         Args:
             region (str): AWS Region.
+            kwargs (dict): Extra variables to pass to the Template.
 
         Returns:
             dict: Rendered Pipeline wrapper.
+
         """
         base = self.settings['pipeline']['base']
 
@@ -137,7 +139,8 @@ class SpinnakerPipeline:
 
         self.log.debug('Wrapper app data:\n%s', pformat(data))
 
-        wrapper = get_template(template_file='pipeline/pipeline_wrapper.json.j2', data=data, formats=self.generated)
+        wrapper = get_template(
+            template_file='pipeline/pipeline_wrapper.json.j2', data=data, formats=self.generated, **kwargs)
 
         return json.loads(wrapper)
 
