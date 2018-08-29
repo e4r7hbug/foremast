@@ -97,6 +97,7 @@ class SpinnakerPipeline:
 
         Returns:
             dict: Rendered Pipeline wrapper.
+
         """
         base = self.settings['pipeline']['base']
 
@@ -146,6 +147,7 @@ class SpinnakerPipeline:
 
         Returns:
             str: Pipeline config json
+
         """
         url = "{0}/applications/{1}/pipelineConfigs".format(API_URL, self.app_name)
         resp = requests.get(url, verify=GATE_CA_BUNDLE, cert=GATE_CLIENT_CERT)
@@ -162,6 +164,7 @@ class SpinnakerPipeline:
 
         Returns:
             str: pipeline_id if existing, empty string of not.
+
         """
         pipelines = self.get_existing_pipelines()
         pipeline_id = None
@@ -184,16 +187,8 @@ class SpinnakerPipeline:
 
         return pipeline_id
 
-    def create_pipeline(self):
-        """Main wrapper for pipeline creation.
-        1. Runs clean_pipelines to clean up existing ones
-        2. determines which environments the pipeline needs
-        3. gets all subnets for template rendering
-        4. Renders all of the pipeline blocks as defined in configs
-        5. Runs post_pipeline to create pipeline
-        """
-        clean_pipelines(app=self.app_name, settings=self.settings)
-
+    def get_regions_envs(self):
+        """Return Environments to use for Pipeline."""
         pipeline_envs = self.environments
         self.log.debug('Envs from pipeline.json: %s', pipeline_envs)
 
@@ -202,9 +197,13 @@ class SpinnakerPipeline:
             for region in self.settings[env]['regions']:
                 regions_envs[region].append(env)
         self.log.info('Environments and Regions for Pipelines:\n%s', json.dumps(regions_envs, indent=4))
+        return regions_envs
 
+    def construct_env_pipelines(self, regions_envs):
+        """Construct Pipeline per Environment."""
         subnets = None
         pipelines = {}
+
         for region, envs in regions_envs.items():
             # TODO: Overrides for an environment no longer makes sense. Need to
             # provide override for entire Region possibly.
@@ -237,9 +236,31 @@ class SpinnakerPipeline:
 
         self.log.debug('Assembled Pipelines:\n%s', pformat(pipelines))
 
-        for region, pipeline in pipelines.items():
+        return pipelines
+
+    def render(self):
+        """Return JSON representation of Spinnaker Pipelines for each Region."""
+        clean_pipelines(app=self.app_name, settings=self.settings)
+
+        regions_envs = self.get_regions_envs()
+
+        pipelines = self.construct_env_pipeline(regions_envs)
+
+        for pipeline in pipelines.values():
             renumerate_stages(pipeline)
 
+        return pipelines
+
+    def create_pipeline(self):
+        """Entry point for pipeline creation.
+
+        Returns:
+            dict: Pipelines for each Region.
+
+        """
+        pipelines = self.render()
+
+        for __region, pipeline in pipelines.items():
             self.post_pipeline(pipeline)
 
-        return True
+        return pipelines
